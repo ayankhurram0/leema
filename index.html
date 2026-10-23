@@ -1,0 +1,3006 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L E E M A | Official Storefront</title>
+
+    <!-- Import Cormorant Garamond, Jost, Lora, and JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Jost:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           00. DESIGN SYSTEM TOKENS (SINGLE SOURCE OF TRUTH)
+           ========================================================================== */
+        :root {
+            /* Surface Palette */
+            --bg-obsidian: #111111;
+            --bg-charcoal: #161616;
+            --bg-elevated-dark: #1F1F1F;
+            --bg-alabaster: #ECE9E2;
+            --bg-stone: #DBD7CD;
+            --bg-Pure-white: #FFFFFF;
+
+            /* High-Contrast Text Hierarchy (WCAG AA/AAA Verified) */
+            --ink-dark-primary: #FFFFFF;
+            --ink-dark-secondary: #E2DFD9;
+            --ink-dark-muted: #C2BEB6;
+
+            --ink-light-primary: #111111;
+            --ink-light-secondary: #2E2C29;
+            --ink-light-muted: #4A4742;
+
+            /* Brand & Semantic Accents */
+            --gold-on-dark: #D6BA8A;
+            --gold-on-light: #7A5B22;
+            --star-gold-dark: #F5C518;
+            --star-gold-light: #8F6814;
+            --verified-green: #136F3E;
+            --danger-muted: #D98282;
+
+            /* Borders & Dividers */
+            --border-on-dark: rgba(255, 255, 255, 0.16);
+            --border-on-dark-strong: rgba(214, 186, 138, 0.45);
+            --border-on-light: rgba(17, 17, 17, 0.16);
+            --border-on-light-strong: rgba(17, 17, 17, 0.45);
+
+            /* Typography Families */
+            --font-display: 'Cormorant Garamond', 'Times New Roman', Times, serif;
+            --font-ui: 'Jost', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Lora', Georgia, serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            /* Accessible Fluid Type Scale (12px absolute floor) */
+            --ts-xs: 0.75rem;
+            --ts-sm: 0.8125rem;
+            --ts-base: 0.9375rem;
+            --ts-md: clamp(1rem, 1.1vw, 1.125rem);
+            --ts-lg: clamp(1.25rem, 1.8vw, 1.5rem);
+            --ts-xl: clamp(1.35rem, 2.4vw, 1.85rem);
+            --ts-2xl: clamp(2.125rem, 4.2vw, 3.25rem);
+            --ts-3xl: clamp(2.5rem, 5.2vw, 4.25rem);
+
+            /* 8-Point Spatial Scale */
+            --sp-1: 0.25rem;
+            --sp-2: 0.5rem;
+            --sp-3: 0.75rem;
+            --sp-4: 1rem;
+            --sp-5: 1.5rem;
+            --sp-6: 2rem;
+            --sp-7: 3rem;
+            --sp-8: 4rem;
+            --sp-9: 6rem;
+            --sp-10: 8rem;
+
+            /* Layout & Gutter Discipline */
+            --container-max: 1440px;
+            --gutter: clamp(1.25rem, 5vw, 4rem);
+            --grid-gap: clamp(1rem, 2vw, 1.5rem);
+            --section-py: clamp(4.5rem, 8vw, 7.5rem);
+            --banner-height: 40px;
+
+            /* Radii & Elevation */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-pill: 999px;
+            --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.18);
+        }
+
+        /* ==========================================================================
+           01. RESET & GLOBAL DISCIPLINE
+           ========================================================================== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            width: 100%;
+            font-family: var(--font-ui);
+            background-color: var(--bg-obsidian);
+            color: var(--ink-dark-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.5;
+        }
+
+        /* Universal Accessible Focus Ring */
+        :focus-visible {
+            outline: 2px solid var(--gold-on-dark);
+            outline-offset: 3px;
+        }
+
+        /* Master Container & Full-Bleed Carousel Alignment */
+        .container {
+            width: 100%;
+            max-width: var(--container-max);
+            margin-inline: auto;
+            padding-inline: var(--gutter);
+        }
+
+        .carousel-bleed {
+            display: flex;
+            gap: var(--grid-gap);
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-inline: max(var(--gutter), calc((100vw - var(--container-max)) / 2 + var(--gutter)));
+            scroll-padding-inline: max(var(--gutter), calc((100vw - var(--container-max)) / 2 + var(--gutter)));
+            padding-bottom: var(--sp-4);
+        }
+
+        .carousel-bleed::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Skip to Content Link for Screen Readers / Keyboard */
+        .skip-link {
+            position: fixed;
+            top: -100px;
+            left: var(--gutter);
+            background: var(--gold-on-dark);
+            color: var(--bg-obsidian);
+            padding: var(--sp-3) var(--sp-5);
+            font-weight: 600;
+            font-size: var(--ts-sm);
+            border-radius: var(--radius-sm);
+            z-index: 9999;
+            text-decoration: none;
+            transition: top 0.2s ease;
+        }
+
+        .skip-link:focus {
+            top: var(--sp-3);
+        }
+
+        /* ==========================================================================
+           02. REUSABLE PRIMITIVES (BUTTONS, SECTION HEADERS, ARROWS, CHIPS)
+           ========================================================================== */
+        .btn {
+            font-family: var(--font-ui);
+            font-size: var(--ts-sm);
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 1rem 2.25rem;
+            min-height: 48px;
+            border-radius: var(--radius-pill);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--sp-2);
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary-light {
+            background-color: var(--bg-Pure-white);
+            color: var(--ink-light-primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary-light:hover {
+            background-color: var(--gold-on-dark);
+        }
+
+        .btn-primary-dark {
+            background-color: var(--bg-obsidian);
+            color: var(--ink-dark-primary);
+            border-color: var(--bg-obsidian);
+        }
+
+        .btn-primary-dark:hover {
+            background-color: transparent;
+            color: var(--ink-light-primary);
+        }
+
+        .btn-outline-gold {
+            background-color: transparent;
+            color: var(--ink-dark-primary);
+            border-color: var(--gold-on-dark);
+        }
+
+        .btn-outline-gold:hover {
+            background-color: rgba(214, 186, 138, 0.14);
+        }
+
+        /* Section Header Component */
+        .section-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: var(--sp-4);
+            margin-bottom: var(--sp-7);
+        }
+
+        .section-header-center {
+            text-align: center;
+            margin-bottom: var(--sp-7);
+        }
+
+        .kicker {
+            display: block;
+            font-family: var(--font-ui);
+            font-size: var(--ts-xs);
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            margin-bottom: var(--sp-2);
+        }
+
+        .kicker-gold {
+            color: var(--gold-on-dark);
+        }
+
+        .kicker-light {
+            color: var(--ink-light-muted);
+        }
+
+        .section-title-underlined {
+            font-family: var(--font-ui);
+            font-size: var(--ts-base);
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--ink-light-primary);
+            border-bottom: 2px solid var(--ink-light-primary);
+            padding-bottom: 6px;
+            display: inline-block;
+        }
+
+        /* Carousel Arrow Controls */
+        .carousel-nav {
+            display: flex;
+            gap: var(--sp-3);
+            flex-shrink: 0;
+        }
+
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid var(--ink-light-primary);
+            background: transparent;
+            color: var(--ink-light-primary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            background: var(--ink-light-primary);
+            color: var(--bg-Pure-white);
+        }
+
+        .icon-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        /* ==========================================================================
+           03. STOREFRONT SECTIONS (GUTTER & CONTRAST HARDENED)
+           ========================================================================== */
+
+        /* 1. Urgency Banner */
+        .urgency-banner {
+            position: relative;
+            width: 100%;
+            height: var(--banner-height);
+            background-color: var(--bg-obsidian);
+            color: var(--ink-dark-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: var(--ts-xs);
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-on-dark);
+            z-index: 30;
+            overflow: hidden;
+        }
+
+        .ub-msg {
+            position: absolute;
+            inset-inline: var(--gutter);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .ub-msg.active {
+            opacity: 1;
+        }
+
+        .ub-msg em {
+            font-style: normal;
+            color: var(--gold-on-dark);
+            font-weight: 600;
+        }
+
+        /* 2. Hero Wrapper */
+        .hero {
+            position: relative;
+            min-height: calc(100vh - var(--banner-height));
+            width: 100%;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.45) 55%, rgba(0, 0, 0, 0.3) 100%),
+                url('https://res.cloudinary.com/dfcbbpovw/image/upload/v1792153058/banner_xnoijt.jpg') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 1;
+        }
+
+        .mobile-video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            display: none;
+        }
+
+        /* 3. Navigation Header */
+        .site-header {
+            width: 100%;
+            border-bottom: 1px solid var(--border-on-dark);
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, transparent 100%);
+        }
+
+        .desktop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-block: var(--sp-5);
+            position: relative;
+        }
+
+        .nav-group {
+            display: flex;
+            align-items: center;
+            gap: var(--sp-6);
+            flex: 1;
+        }
+
+        .nav-group.right {
+            justify-content: flex-end;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--ink-dark-primary);
+            font-size: var(--ts-sm);
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            padding-block: var(--sp-1);
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--gold-on-dark);
+        }
+
+        .desktop-header .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-display);
+            color: var(--ink-dark-primary);
+            /* S++ FIX: Prominent, true logo text size */
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            text-decoration: none;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Fallback / Mobile logo styling */
+        .logo {
+            font-family: var(--font-display);
+            color: var(--ink-dark-primary);
+            font-size: clamp(1.4rem, 4.5vw, 1.85rem);
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            display: none;
+            width: 100%;
+            position: relative;
+            z-index: 100;
+        }
+
+        .mobile-header-top {
+            display: grid;
+            grid-template-columns: 44px 1fr auto;
+            align-items: center;
+            padding: var(--sp-2) var(--gutter);
+            border-bottom: 1px solid var(--border-on-dark);
+            min-height: 58px;
+            gap: var(--sp-2);
+        }
+
+        .mobile-header-top .logo {
+            text-align: center;
+            justify-self: center;
+            white-space: nowrap;
+            letter-spacing: 0.22em;
+            font-size: clamp(1.35rem, 5vw, 1.85rem);
+            padding-inline: var(--sp-1);
+        }
+
+        .mobile-left-nav {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .mobile-icons {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            justify-content: flex-end;
+        }
+
+        .hamburger-btn {
+            background: transparent;
+            border: none;
+            color: var(--ink-dark-primary);
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            padding: 8px 4px;
+        }
+
+        .hamburger-line {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background-color: var(--ink-dark-primary);
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.2s ease;
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-btn.active .hamburger-line:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Mobile Drawer Menu */
+        .mobile-drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 998;
+        }
+
+        .mobile-drawer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: min(84vw, 320px);
+            height: 100vh;
+            background: var(--bg-charcoal);
+            border-right: 1px solid var(--border-on-dark);
+            z-index: 999;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .mobile-drawer.active {
+            transform: translateX(0);
+        }
+
+        .drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--sp-4) var(--sp-5);
+            border-bottom: 1px solid var(--border-on-dark);
+        }
+
+        .drawer-brand {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            letter-spacing: 0.22em;
+            color: var(--ink-dark-primary);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .drawer-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--ink-dark-primary);
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .drawer-nav-list {
+            list-style: none;
+            padding: var(--sp-3) 0;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .drawer-nav-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .drawer-nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--sp-4) var(--sp-5);
+            color: var(--ink-dark-primary);
+            text-decoration: none;
+            font-size: var(--ts-sm);
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .drawer-nav-link:hover,
+        .drawer-nav-link:active {
+            background: rgba(214, 186, 138, 0.1);
+            color: var(--gold-on-dark);
+        }
+
+        .drawer-footer {
+            padding: var(--sp-4) var(--sp-5);
+            border-top: 1px solid var(--border-on-dark);
+            background: rgba(0, 0, 0, 0.2);
+            font-size: var(--ts-xs);
+            color: var(--ink-dark-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .nav-icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--ink-dark-primary);
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .nav-icon-btn svg {
+            width: 19px;
+            height: 19px;
+            stroke: currentColor;
+        }
+
+        /* 4. Hero Conversion Content */
+        .hero-body {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding-block: var(--sp-9);
+        }
+
+        .hero-content {
+            max-width: 720px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--sp-5);
+        }
+
+        .social-proof {
+            font-size: clamp(0.72rem, 2.3vw, 0.8125rem);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-dark-primary);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(17, 17, 17, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 0.45rem 0.9rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--border-on-dark);
+            white-space: nowrap;
+            max-width: 100%;
+        }
+
+        .stars {
+            color: var(--star-gold-dark);
+            letter-spacing: 0.08em;
+            flex-shrink: 0;
+            font-size: 0.9em;
+        }
+
+        .headline {
+            font-family: var(--font-display);
+            font-size: var(--ts-3xl);
+            line-height: 1.08;
+            font-weight: 400;
+            color: var(--ink-dark-primary);
+        }
+
+        .body-text {
+            font-family: var(--font-body);
+            font-size: var(--ts-md);
+            line-height: 1.75;
+            color: var(--ink-dark-secondary);
+            max-width: 58ch;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--sp-3);
+            margin-top: var(--sp-2);
+        }
+
+        .cta-note {
+            font-size: var(--ts-xs);
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink-dark-secondary);
+        }
+
+        /* 5. Trust Badges Section */
+        .trust-badges-section {
+            background-color: var(--bg-charcoal);
+            padding-block: var(--sp-8);
+            border-top: 1px solid var(--border-on-dark);
+            border-bottom: 1px solid var(--border-on-dark);
+        }
+
+        .trust-badges-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--sp-6);
+        }
+
+        .tb-item {
+            display: flex;
+            align-items: center;
+            gap: var(--sp-4);
+        }
+
+        .tb-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 1px solid var(--border-on-dark-strong);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gold-on-dark);
+            flex-shrink: 0;
+            background: rgba(214, 186, 138, 0.06);
+        }
+
+        .tb-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .tb-text {
+            display: flex;
+            flex-direction: column;
+            gap: var(--sp-1);
+        }
+
+        .tb-text h3 {
+            font-size: var(--ts-sm);
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--ink-dark-primary);
+        }
+
+        .tb-text p {
+            font-size: var(--ts-sm);
+            color: var(--ink-dark-muted);
+            line-height: 1.45;
+        }
+
+        /* 6. Staggered Gallery Section */
+        .staggered-gallery-section {
+            background-color: var(--bg-alabaster);
+            padding-block: var(--section-py);
+        }
+
+        .sg-image-gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--grid-gap);
+            padding-block: var(--sp-8);
+        }
+
+        .sg-image-card {
+            position: relative;
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .sg-image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .sg-image-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .sg-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.78) 100%);
+            z-index: 1;
+        }
+
+        .sg-image-title {
+            position: absolute;
+            bottom: var(--sp-5);
+            left: var(--sp-5);
+            font-family: var(--font-display);
+            font-size: var(--ts-lg);
+            font-weight: 500;
+            color: var(--ink-dark-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            z-index: 2;
+        }
+
+        /* 7. Product Carousel Sections */
+        .carousel-section {
+            background-color: var(--bg-alabaster);
+            padding-block: var(--section-py);
+            border-top: 1px solid var(--border-on-light);
+        }
+
+        .bs-card {
+            flex: 0 0 calc((min(100vw, var(--container-max)) - (var(--gutter) * 2) - (var(--grid-gap) * 3)) / 4);
+            min-width: 270px;
+            background-color: var(--bg-Pure-white);
+            border-radius: var(--radius-lg);
+            padding: var(--sp-4);
+            position: relative;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(17, 17, 17, 0.06);
+        }
+
+        .bs-badge {
+            position: absolute;
+            top: calc(var(--sp-4) + 12px);
+            left: calc(var(--sp-4) + 12px);
+            background-color: var(--bg-obsidian);
+            color: var(--ink-dark-primary);
+            font-family: var(--font-ui);
+            font-size: var(--ts-xs);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 6px 12px;
+            border-radius: var(--radius-pill);
+            z-index: 2;
+        }
+
+        .bs-img-wrapper {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            margin-bottom: var(--sp-4);
+            overflow: hidden;
+            border-radius: var(--radius-md);
+            background: var(--bg-stone);
+        }
+
+        .bs-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            transition: transform 0.5s ease;
+        }
+
+        .bs-card:hover .bs-img-wrapper img {
+            transform: scale(1.04);
+        }
+
+        .bs-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: space-between;
+            gap: var(--sp-4);
+        }
+
+        .bs-card-title {
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: var(--ts-base);
+            line-height: 1.35;
+            letter-spacing: 0.04em;
+            color: var(--ink-light-primary);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .bs-card-subtitle {
+            font-size: var(--ts-sm);
+            color: var(--ink-light-muted);
+            font-weight: 500;
+        }
+
+        .bs-info-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: var(--sp-3);
+            border-top: 1px solid var(--border-on-light);
+            gap: var(--sp-2);
+        }
+
+        .bs-sizes {
+            display: flex;
+            gap: 6px;
+        }
+
+        .size-pill {
+            min-width: 34px;
+            height: 34px;
+            padding-inline: 6px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-on-light-strong);
+            background: transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--ts-xs);
+            font-family: var(--font-ui);
+            font-weight: 600;
+            color: var(--ink-light-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .size-pill:hover,
+        .size-pill[aria-pressed="true"] {
+            border-color: var(--ink-light-primary);
+            background-color: var(--ink-light-primary);
+            color: var(--bg-Pure-white);
+        }
+
+        .bs-price {
+            font-family: var(--font-ui);
+            font-weight: 700;
+            font-size: var(--ts-base);
+            color: var(--ink-light-primary);
+            white-space: nowrap;
+        }
+
+        .section-footer-cta {
+            display: flex;
+            justify-content: center;
+            margin-top: var(--sp-6);
+        }
+
+        /* 8. Minimalist Quote Section */
+        .simple-quote-section {
+            background-color: var(--bg-charcoal);
+            padding-block: var(--section-py);
+            text-align: center;
+            border-block: 1px solid var(--border-on-dark);
+        }
+
+        .sq-container {
+            max-width: 860px;
+            margin-inline: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--sp-5);
+        }
+
+        .sq-text {
+            font-family: var(--font-display);
+            font-size: var(--ts-xl);
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--ink-dark-primary);
+            letter-spacing: 0.03em;
+        }
+
+        .sq-gold-line {
+            display: block;
+            margin-top: var(--sp-3);
+            color: var(--gold-on-dark);
+            font-style: italic;
+        }
+
+        .sq-citation {
+            font-size: var(--ts-sm);
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            color: var(--gold-on-dark);
+            text-transform: uppercase;
+        }
+
+        /* 9. Why LEEMA Comparison Section */
+        .why-leema {
+            background-color: var(--bg-charcoal);
+            padding-block: var(--section-py);
+            color: var(--ink-dark-primary);
+        }
+
+        .wl-inner {
+            max-width: 960px;
+            margin-inline: auto;
+        }
+
+        .wl-title {
+            font-family: var(--font-display);
+            font-size: var(--ts-2xl);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        .wl-title span {
+            display: block;
+            color: var(--gold-on-dark);
+        }
+
+        .wl-table {
+            border: 1px solid var(--border-on-dark);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: var(--bg-elevated-dark);
+        }
+
+        .wl-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 1px solid var(--border-on-dark);
+        }
+
+        .wl-row:first-child {
+            border-top: none;
+        }
+
+        .wl-cell {
+            display: flex;
+            align-items: center;
+            gap: var(--sp-4);
+            padding: var(--sp-5) var(--sp-6);
+            font-size: var(--ts-base);
+            line-height: 1.45;
+        }
+
+        .wl-cell.usual {
+            color: var(--ink-dark-muted);
+        }
+
+        .wl-cell.leema {
+            color: var(--ink-dark-primary);
+            font-weight: 500;
+            background: rgba(214, 186, 138, 0.08);
+            border-left: 1px solid var(--border-on-dark-strong);
+        }
+
+        .wl-head .wl-cell {
+            padding-block: var(--sp-4);
+            font-size: var(--ts-sm);
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .wl-head .wl-cell.leema {
+            color: var(--gold-on-dark);
+        }
+
+        .wl-mark {
+            flex-shrink: 0;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--ts-xs);
+            font-weight: 700;
+        }
+
+        .usual .wl-mark {
+            border: 1px solid var(--ink-dark-muted);
+            color: var(--ink-dark-muted);
+        }
+
+        .leema .wl-mark {
+            background: var(--gold-on-dark);
+            color: var(--bg-obsidian);
+        }
+
+        .wl-guarantee {
+            margin-top: var(--sp-8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: var(--sp-4);
+        }
+
+        .wl-g-text {
+            font-family: var(--font-body);
+            font-size: var(--ts-md);
+            line-height: 1.7;
+            color: var(--ink-dark-secondary);
+            max-width: 52ch;
+        }
+
+        .wl-trust {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--sp-2) var(--sp-5);
+            font-size: var(--ts-xs);
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--gold-on-dark);
+        }
+
+        /* 10. Reviews Section */
+        .reviews-section {
+            background-color: var(--bg-stone);
+            padding-block: var(--section-py);
+            color: var(--ink-light-primary);
+        }
+
+        .rv-title {
+            font-family: var(--font-display);
+            font-size: var(--ts-2xl);
+            font-weight: 400;
+            line-height: 1.1;
+            text-transform: uppercase;
+            color: var(--ink-light-primary);
+        }
+
+        .rv-summary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--sp-7);
+            margin-bottom: var(--sp-7);
+        }
+
+        .rv-score {
+            text-align: center;
+        }
+
+        .rv-score-num {
+            font-family: var(--font-display);
+            font-size: 4.25rem;
+            line-height: 1;
+            color: var(--ink-light-primary);
+        }
+
+        .rv-score-stars {
+            color: var(--star-gold-light);
+            font-size: 1.15rem;
+            letter-spacing: 0.12em;
+            margin-top: var(--sp-1);
+        }
+
+        .rv-score-text {
+            font-size: var(--ts-xs);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--ink-light-secondary);
+            margin-top: var(--sp-2);
+        }
+
+        .rv-bars {
+            width: 100%;
+            max-width: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--sp-2);
+        }
+
+        .rv-bar {
+            display: grid;
+            grid-template-columns: 2.5rem 1fr 3rem;
+            align-items: center;
+            gap: var(--sp-3);
+            font-size: var(--ts-xs);
+            font-weight: 600;
+            color: var(--ink-light-secondary);
+        }
+
+        .rv-bar-track {
+            height: 6px;
+            border-radius: var(--radius-pill);
+            background: rgba(17, 17, 17, 0.14);
+            overflow: hidden;
+        }
+
+        .rv-bar-fill {
+            display: block;
+            height: 100%;
+            width: var(--w);
+            background: var(--ink-light-primary);
+            border-radius: var(--radius-pill);
+        }
+
+        .rv-bar-pct {
+            text-align: right;
+            color: var(--ink-light-secondary);
+        }
+
+        .rv-filter-label {
+            text-align: center;
+            font-size: var(--ts-xs);
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--ink-light-secondary);
+            margin-bottom: var(--sp-3);
+        }
+
+        .rv-chips {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--sp-2);
+            margin-bottom: var(--sp-6);
+        }
+
+        .rv-chip {
+            font-family: var(--font-ui);
+            font-size: var(--ts-sm);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            padding: 0.65rem 1.35rem;
+            min-height: 42px;
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--border-on-light-strong);
+            background: rgba(255, 255, 255, 0.45);
+            color: var(--ink-light-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .rv-chip:hover {
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .rv-chip.active {
+            background: var(--ink-light-primary);
+            color: var(--bg-Pure-white);
+            border-color: var(--ink-light-primary);
+        }
+
+        .rv-card {
+            flex: 0 0 360px;
+            background: var(--bg-Pure-white);
+            border-radius: var(--radius-lg);
+            padding: var(--sp-4);
+            display: flex;
+            flex-direction: column;
+            scroll-snap-align: start;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .rv-card[hidden] {
+            display: none;
+        }
+
+        .rv-photo {
+            aspect-ratio: 4 / 5;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: var(--sp-4);
+        }
+
+        .rv-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            display: block;
+        }
+
+        .rv-body {
+            display: flex;
+            flex-direction: column;
+            gap: var(--sp-3);
+            flex: 1;
+            padding: 0 var(--sp-2) var(--sp-2);
+        }
+
+        .rv-stars {
+            color: var(--star-gold-light);
+            font-size: 1rem;
+            letter-spacing: 0.12em;
+        }
+
+        .rv-headline {
+            font-family: var(--font-display);
+            font-size: var(--ts-lg);
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--ink-light-primary);
+        }
+
+        .rv-quote {
+            font-family: var(--font-body);
+            font-size: var(--ts-base);
+            line-height: 1.65;
+            color: var(--ink-light-secondary);
+            flex: 1;
+        }
+
+        .rv-fit {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--sp-2);
+            padding-block: var(--sp-3);
+            border-block: 1px solid var(--border-on-light);
+        }
+
+        .rv-fit span {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-size: var(--ts-sm);
+            font-weight: 600;
+            color: var(--ink-light-primary);
+        }
+
+        .rv-fit b {
+            font-size: var(--ts-xs);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink-light-muted);
+        }
+
+        .rv-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: var(--sp-2);
+        }
+
+        .rv-name {
+            display: block;
+            font-size: var(--ts-sm);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink-light-primary);
+        }
+
+        .rv-loc {
+            font-size: var(--ts-xs);
+            font-weight: 500;
+            color: var(--ink-light-muted);
+        }
+
+        .rv-verified {
+            font-size: var(--ts-xs);
+            font-weight: 700;
+            color: var(--verified-green);
+            white-space: nowrap;
+        }
+
+        .rv-controls-bar {
+            margin-top: var(--sp-5);
+            display: flex;
+            align-items: center;
+            gap: var(--sp-5);
+        }
+
+        .rv-progress {
+            flex: 1;
+            height: 3px;
+            background: rgba(17, 17, 17, 0.16);
+            border-radius: var(--radius-pill);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rv-progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 30%;
+            background: var(--ink-light-primary);
+            border-radius: var(--radius-pill);
+            transition: left 0.15s linear, width 0.2s ease;
+        }
+
+        /* 11. FAQ Section */
+        .faq-section {
+            background-color: var(--bg-charcoal);
+            padding-block: var(--section-py);
+            color: var(--ink-dark-primary);
+        }
+
+        .faq-layout {
+            display: grid;
+            grid-template-columns: 4fr 8fr;
+            gap: var(--sp-8);
+            align-items: start;
+        }
+
+        .faq-head {
+            position: sticky;
+            top: var(--sp-7);
+            display: flex;
+            flex-direction: column;
+            gap: var(--sp-4);
+        }
+
+        .faq-title {
+            font-family: var(--font-display);
+            font-size: var(--ts-2xl);
+            font-weight: 400;
+            line-height: 1.1;
+            text-transform: uppercase;
+        }
+
+        .faq-title span {
+            display: block;
+            color: var(--gold-on-dark);
+        }
+
+        .faq-sub {
+            font-family: var(--font-body);
+            font-size: var(--ts-md);
+            line-height: 1.75;
+            color: var(--ink-dark-secondary);
+            max-width: 36ch;
+        }
+
+        .faq-list {
+            border-top: 1px solid var(--border-on-dark);
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border-on-dark);
+        }
+
+        .faq-question {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: var(--sp-4);
+            padding-block: var(--sp-5);
+            background: transparent;
+            border: none;
+            color: var(--ink-dark-primary);
+            font-family: var(--font-ui);
+            font-size: var(--ts-md);
+            font-weight: 500;
+            line-height: 1.4;
+            text-align: left;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--gold-on-dark);
+        }
+
+        .faq-num {
+            flex-shrink: 0;
+            width: 2.25rem;
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--gold-on-dark);
+        }
+
+        .faq-q-text {
+            flex: 1;
+        }
+
+        .faq-icon {
+            position: relative;
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            color: var(--gold-on-dark);
+        }
+
+        .faq-icon::before,
+        .faq-icon::after {
+            content: '';
+            position: absolute;
+            background-color: currentColor;
+            transition: transform 0.35s ease, opacity 0.35s ease;
+        }
+
+        .faq-icon::before {
+            top: 6px;
+            left: 0;
+            width: 14px;
+            height: 2px;
+        }
+
+        .faq-icon::after {
+            top: 0;
+            left: 6px;
+            width: 2px;
+            height: 14px;
+        }
+
+        .faq-item.active .faq-icon::after {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
+
+        .faq-answer-wrapper {
+            max-height: 0;
+            overflow: hidden;
+            visibility: hidden;
+            transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.45s;
+        }
+
+        .faq-item.active .faq-answer-wrapper {
+            visibility: visible;
+        }
+
+        .faq-answer {
+            padding: 0 0 var(--sp-5) 3.25rem;
+            font-family: var(--font-body);
+            font-size: var(--ts-base);
+            line-height: 1.8;
+            color: var(--ink-dark-secondary);
+            max-width: 62ch;
+        }
+
+        .faq-answer strong {
+            display: block;
+            font-family: var(--font-ui);
+            font-size: var(--ts-base);
+            font-weight: 600;
+            color: var(--gold-on-dark);
+            margin-bottom: var(--sp-1);
+        }
+
+        .faq-cta {
+            margin-top: var(--sp-6);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--sp-4);
+        }
+
+        /* 12. Luxury Footer */
+        .site-footer {
+            background-color: var(--bg-alabaster);
+            color: var(--ink-light-primary);
+            padding-block: var(--sp-9) var(--sp-7);
+            border-top: 1px solid var(--border-on-light);
+        }
+
+        .footer-top {
+            margin-bottom: var(--sp-8);
+            text-align: center;
+        }
+
+        .footer-logo-wrapper {
+            border-block: 1px solid var(--ink-light-primary);
+            padding-block: var(--sp-6);
+            margin-bottom: var(--sp-5);
+        }
+
+        .footer-logo {
+            font-family: var(--font-display);
+            font-size: clamp(2.75rem, 10vw, 8.5rem);
+            letter-spacing: 0.25em;
+            color: var(--ink-light-primary);
+            line-height: 1;
+            font-weight: 400;
+        }
+
+        .footer-tagline {
+            font-family: var(--font-body);
+            font-size: var(--ts-md);
+            line-height: 1.65;
+            max-width: 56ch;
+            margin-inline: auto;
+            color: var(--ink-light-secondary);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr 1fr;
+            gap: var(--sp-7);
+            margin-bottom: var(--sp-8);
+        }
+
+        .footer-brand-box p {
+            font-size: var(--ts-base);
+            color: var(--ink-light-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--sp-4);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: var(--sp-2);
+        }
+
+        .newsletter-input {
+            flex: 1;
+            min-height: 44px;
+            padding-inline: var(--sp-4);
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--border-on-light-strong);
+            background: var(--bg-Pure-white);
+            font-family: var(--font-ui);
+            font-size: var(--ts-sm);
+            color: var(--ink-light-primary);
+        }
+
+        .newsletter-btn {
+            padding-inline: var(--sp-5);
+            min-height: 44px;
+            border-radius: var(--radius-pill);
+            border: none;
+            background: var(--ink-light-primary);
+            color: var(--bg-Pure-white);
+            font-family: var(--font-ui);
+            font-size: var(--ts-xs);
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .footer-col-title {
+            color: var(--ink-light-primary);
+            font-size: var(--ts-sm);
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: var(--sp-4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .f-icon {
+            display: none;
+            position: relative;
+            width: 12px;
+            height: 12px;
+        }
+
+        .f-icon::before,
+        .f-icon::after {
+            content: '';
+            position: absolute;
+            background-color: currentColor;
+            transition: transform 0.3s ease;
+        }
+
+        .f-icon::before {
+            top: 5px;
+            left: 0;
+            width: 12px;
+            height: 1.5px;
+        }
+
+        .f-icon::after {
+            top: 0;
+            left: 5px;
+            width: 1.5px;
+            height: 12px;
+        }
+
+        .footer-column.active .f-icon::after {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--sp-3);
+        }
+
+        .footer-links a {
+            color: var(--ink-light-secondary);
+            text-decoration: none;
+            font-size: var(--ts-base);
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--ink-light-primary);
+            text-decoration: underline;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-on-light);
+            padding-top: var(--sp-5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--sp-3);
+        }
+
+        .footer-copy {
+            font-size: var(--ts-xs);
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink-light-muted);
+            text-align: center;
+        }
+
+        /* ==========================================================================
+           04. RESPONSIVE BREAKPOINTS
+           ========================================================================== */
+        @media (min-width: 901px) {
+
+            /* S++ FIX: STAGGERED EFFECT DESKTOP */
+            .sg-image-card:nth-child(odd) {
+                transform: translateY(-40px);
+            }
+
+            .sg-image-card:nth-child(even) {
+                transform: translateY(40px);
+            }
+
+            /* S++ FIX: ABSOLUTELY CENTERED DESKTOP REVIEW CARDS
+               ROOT CAUSE: The global `.carousel-bleed` padding forced an artificial overflow width, 
+               which breaks standard centering and forces a massive left-gap, making it look right-aligned.
+               FIX: Strip the problematic padding, and use the S++ Auto-Margin Centering Trick. */
+
+            .carousel-bleed#rv-track {
+                padding-inline: var(--gutter) !important;
+                scroll-padding-inline: var(--gutter) !important;
+                justify-content: flex-start !important;
+            }
+
+            /* The auto-margin trick guarantees absolute centering if the content fits the screen, 
+               and gracefully falls back to 0-margin normal scrolling if it overflows. */
+            .carousel-bleed#rv-track .rv-card:first-child {
+                margin-left: auto;
+            }
+
+            .carousel-bleed#rv-track .rv-card:last-child {
+                margin-right: auto;
+            }
+
+            /* Ensure internal card items are perfectly centered to match the aesthetic */
+            .rv-card {
+                text-align: center;
+                align-items: center;
+            }
+
+            .rv-body {
+                align-items: center;
+            }
+
+            .rv-fit {
+                justify-content: center;
+            }
+
+            .rv-fit span {
+                align-items: center;
+                text-align: center;
+            }
+
+            .rv-footer {
+                flex-direction: column;
+                align-items: center;
+                gap: var(--sp-3);
+                width: 100%;
+            }
+
+            .rv-footer>div {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.78) 100%);
+            }
+
+            .mobile-video {
+                display: block;
+            }
+
+            .desktop-header {
+                display: none;
+            }
+
+            .mobile-header {
+                display: flex;
+            }
+
+            .hero-body {
+                align-items: flex-end;
+                padding-bottom: var(--sp-8);
+            }
+
+            .hero-content {
+                align-items: center;
+                text-align: center;
+                margin-inline: auto;
+            }
+
+            .hero-cta-group {
+                align-items: center;
+            }
+
+            .trust-badges-grid {
+                grid-template-columns: 1fr;
+                gap: var(--sp-5);
+            }
+
+            .tb-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            /* S++ FIX: MOBILE STAGGERED EFFECT (1st UP, 2nd DOWN, 3rd UP, 4th DOWN) */
+            .sg-image-gallery {
+                grid-template-columns: repeat(2, 1fr);
+                padding-block: var(--sp-8);
+                /* Ensure enough padding so shifted cards are fully visible */
+                gap: var(--sp-4);
+            }
+
+            .sg-image-card:nth-child(odd) {
+                transform: translateY(-32px);
+            }
+
+            .sg-image-card:nth-child(even) {
+                transform: translateY(32px);
+            }
+
+            .carousel-nav {
+                display: none;
+            }
+
+            .bs-card {
+                flex: 0 0 82%;
+                min-width: 260px;
+            }
+
+            .wl-row {
+                grid-template-columns: 1fr 1.15fr;
+            }
+
+            .wl-cell {
+                padding: var(--sp-4);
+                font-size: var(--ts-sm);
+                gap: var(--sp-2);
+            }
+
+            .rv-summary {
+                flex-direction: column;
+                gap: var(--sp-4);
+            }
+
+            .rv-card {
+                flex: 0 0 84%;
+            }
+
+            .faq-layout {
+                grid-template-columns: 1fr;
+                gap: var(--sp-6);
+            }
+
+            .faq-head {
+                position: static;
+            }
+
+            .faq-answer {
+                padding-left: 0;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: var(--sp-4);
+            }
+
+            .footer-column {
+                border-bottom: 1px solid var(--border-on-light);
+                padding-bottom: var(--sp-3);
+            }
+
+            .footer-col-title {
+                cursor: pointer;
+                margin-bottom: var(--sp-2);
+            }
+
+            .f-icon {
+                display: block;
+            }
+
+            .footer-links-wrapper {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.35s ease;
+            }
+
+            .footer-links {
+                padding-top: var(--sp-3);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- 1. Urgency Banner -->
+    <div class="urgency-banner" role="region" aria-label="Store Announcements">
+        <span class="ub-msg active">No shameez needed. <em>Or send it back.</em></span>
+        <span class="ub-msg">Fully opaque. <em>Breathable in 40&deg;C heat.</em></span>
+        <span class="ub-msg">Open it. Check it. <em>Then pay.</em></span>
+    </div>
+
+    <!-- 2. Hero Section -->
+    <section class="hero">
+        <video class="mobile-video" autoplay loop muted playsinline aria-hidden="true">
+            <source
+                src="https://res.cloudinary.com/dfcbbpovw/video/upload/v1791671621/From_Klickpin.com-_Explore_Stunning_old_money_style_looks_for_your_next_Pinterest_save_with_enough_variety_to_inspire_your_next_creative_step-pin-_online-video-cutter.com_nvjlnd.mp4"
+                type="video/mp4">
+        </video>
+
+        <header class="site-header">
+            <nav class="container desktop-header" aria-label="Primary Navigation">
+                <div class="nav-group">
+                    <a href="#best-sellers" class="nav-link">Best Sellers</a>
+                    <a href="#best-sellers" class="nav-link">Abayas</a>
+                    <a href="#best-sellers" class="nav-link">Hijabs</a>
+                </div>
+                <a href="#" class="logo">L E E M A</a>
+                <div class="nav-group right">
+                    <a href="#collections" class="nav-link">Collections</a>
+                    <a href="#reviews" class="nav-link">Reviews</a>
+                    <a href="#best-sellers" class="nav-link">Cart (0)</a>
+                </div>
+            </nav>
+
+            <!-- Mobile Header Bar -->
+            <nav class="mobile-header" aria-label="Mobile Navigation">
+                <div class="mobile-header-top">
+                    <div class="mobile-left-nav">
+                        <button type="button" class="hamburger-btn" id="mobile-menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                        </button>
+                    </div>
+                    <a href="#" class="logo">L E E M A</a>
+                    <div class="mobile-icons">
+                        <button type="button" class="nav-icon-btn" aria-label="Search store">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </button>
+                        <button type="button" class="nav-icon-btn" aria-label="Shopping bag (0 items)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Mobile Navigation Drawer Overlay & Panel -->
+            <div class="mobile-drawer-overlay" id="drawer-overlay" aria-hidden="true"></div>
+            <div class="mobile-drawer" id="mobile-drawer" role="dialog" aria-modal="true" aria-label="Navigation Menu">
+                <div class="drawer-header">
+                    <a href="#" class="drawer-brand">L E E M A</a>
+                    <button type="button" class="drawer-close-btn" id="drawer-close" aria-label="Close menu">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <ul class="drawer-nav-list">
+                    <li class="drawer-nav-item">
+                        <a href="#best-sellers" class="drawer-nav-link">
+                            <span>Best Sellers</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
+                    </li>
+                    <li class="drawer-nav-item">
+                        <a href="#best-sellers" class="drawer-nav-link">
+                            <span>Abayas</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
+                    </li>
+                    <li class="drawer-nav-item">
+                        <a href="#best-sellers" class="drawer-nav-link">
+                            <span>Hijabs</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
+                    </li>
+                    <li class="drawer-nav-item">
+                        <a href="#collections" class="drawer-nav-link">
+                            <span>Collections</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
+                    </li>
+                    <li class="drawer-nav-item">
+                        <a href="#why-leema" class="drawer-nav-link">
+                            <span>Why LEEMA</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
+                    </li>
+                    <li class="drawer-nav-item">
+                        <a href="#reviews" class="drawer-nav-link">
+                            <span>Customer Reviews</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
+                    </li>
+                    <li class="drawer-nav-item">
+                        <a href="#faq" class="drawer-nav-link">
+                            <span>Frequently Asked</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
+                    </li>
+                </ul>
+                <div class="drawer-footer">
+                    <span>4.9/5 Rating &middot; 12,800+ Verified Customers across Pakistan</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="container hero-body" id="main-content">
+            <div class="hero-content">
+                <div class="social-proof">
+                    <span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                    <span>4.9/5 &middot; Loved By 12,800+ Women</span>
+                </div>
+
+                <h1 class="headline">The Most Precious Things Are Always Covered.</h1>
+
+                <p class="body-text">Pearls stay in their shell. Gold stays in the locker. You were never meant to be on
+                    display. You were meant to be treasured.</p>
+
+                <div class="hero-cta-group">
+                    <a href="#best-sellers" class="btn btn-primary-light">Get My Abaya</a>
+                    <div class="cta-note">Fully opaque &middot; One layer &middot; Breathable in 40&deg;C heat</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Trust Badges Section -->
+    <section class="trust-badges-section" aria-label="Brand Guarantees">
+        <div class="container trust-badges-grid">
+            <div class="tb-item">
+                <div class="tb-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                </div>
+                <div class="tb-text">
+                    <h3>ONE LAYER. FULLY OPAQUE.</h3>
+                    <p>Zero see-through, even in direct noon sunlight.</p>
+                </div>
+            </div>
+
+            <div class="tb-item">
+                <div class="tb-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                        <rect x="3" y="3" width="12" height="14" rx="2" />
+                        <path d="M15 8h4l3 3v6h-7" />
+                        <circle cx="7.5" cy="19.5" r="1.5" />
+                        <circle cx="17.5" cy="19.5" r="1.5" />
+                    </svg>
+                </div>
+                <div class="tb-text">
+                    <h3>OPEN. CHECK. THEN PAY.</h3>
+                    <p>Open your parcel, inspect the fabric, then pay the courier.</p>
+                </div>
+            </div>
+
+            <div class="tb-item">
+                <div class="tb-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                        <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8" />
+                        <path d="M3 3v5h5" />
+                    </svg>
+                </div>
+                <div class="tb-text">
+                    <h3>7-DAY DOORSTEP EXCHANGE</h3>
+                    <p>Wrong size or not what you expected? We pick it up.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Staggered Gallery Section -->
+    <section class="staggered-gallery-section" id="collections">
+        <div class="container">
+            <div class="section-header-center">
+                <span class="kicker kicker-light">ONE LAYER, EVERY OCCASION</span>
+                <h2 class="section-title-underlined">WHERE ARE YOU GOING?</h2>
+            </div>
+            <div class="sg-image-gallery">
+                <a href="#best-sellers" class="sg-image-card">
+                    <img src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792072858/1_lyyb8b.jpg"
+                        alt="Everyday Essentials Collection">
+                    <div class="sg-overlay"></div>
+                    <span class="sg-image-title">Everyday</span>
+                </a>
+                <a href="#best-sellers" class="sg-image-card">
+                    <img src="https://images.unsplash.com/photo-1552874869-5c39ec9288dc?q=80&w=800&auto=format&fit=crop"
+                        alt="Loungewear Sets Collection">
+                    <div class="sg-overlay"></div>
+                    <span class="sg-image-title">Lounge</span>
+                </a>
+                <a href="#best-sellers" class="sg-image-card">
+                    <img src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792072868/2_czncnq.jpg"
+                        alt="Occasion Wear Collection">
+                    <div class="sg-overlay"></div>
+                    <span class="sg-image-title">Occasion</span>
+                </a>
+                <a href="#heritage" class="sg-image-card">
+                    <img src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792083447/4_ogvbbk.jpg"
+                        alt="Heritage Collection">
+                    <div class="sg-overlay"></div>
+                    <span class="sg-image-title">Heritage</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Best Sellers Section -->
+    <section class="carousel-section" id="best-sellers">
+        <div class="container">
+            <div class="section-header-bar">
+                <div>
+                    <span class="kicker kicker-light">WORN BY 12,800+ WOMEN</span>
+                    <h2 class="section-title-underlined">WHAT WOMEN CHOOSE FIRST</h2>
+                </div>
+                <div class="carousel-nav">
+                    <button type="button" class="icon-btn" data-carousel-prev="bs-track-1"
+                        aria-label="Previous Best Sellers">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <button type="button" class="icon-btn" data-carousel-next="bs-track-1"
+                        aria-label="Next Best Sellers">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-bleed" id="bs-track-1">
+            <article class="bs-card">
+                <span class="bs-badge">Best Seller</span>
+                <div class="bs-img-wrapper">
+                    <img src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792072868/2_czncnq.jpg"
+                        alt="Classic Nida Abaya in Jet Black">
+                </div>
+                <div class="bs-info">
+                    <div>
+                        <h3 class="bs-card-title">Classic Nida Abaya</h3>
+                        <p class="bs-card-subtitle">Jet Black &middot; High-Density Nida</p>
+                    </div>
+                    <div class="bs-info-bottom">
+                        <div class="bs-sizes" role="group" aria-label="Select size for Classic Nida Abaya">
+                            <button type="button" class="size-pill" aria-pressed="false">S</button>
+                            <button type="button" class="size-pill" aria-pressed="true">M</button>
+                            <button type="button" class="size-pill" aria-pressed="false">L</button>
+                            <button type="button" class="size-pill" aria-pressed="false">XL</button>
+                        </div>
+                        <div class="bs-price">PKR 6,500</div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="bs-card">
+                <span class="bs-badge">New</span>
+                <div class="bs-img-wrapper">
+                    <img src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792154848/5_pz2d9k.jpg"
+                        alt="Premium Silk Abaya in Mocha Brown">
+                </div>
+                <div class="bs-info">
+                    <div>
+                        <h3 class="bs-card-title">Premium Silk Abaya</h3>
+                        <p class="bs-card-subtitle">Mocha Brown &middot; Matte Satin</p>
+                    </div>
+                    <div class="bs-info-bottom">
+                        <div class="bs-sizes" role="group" aria-label="Select size for Premium Silk Abaya">
+                            <button type="button" class="size-pill" aria-pressed="false">S</button>
+                            <button type="button" class="size-pill" aria-pressed="true">M</button>
+                            <button type="button" class="size-pill" aria-pressed="false">L</button>
+                            <button type="button" class="size-pill" aria-pressed="false">XL</button>
+                        </div>
+                        <div class="bs-price">PKR 8,200</div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="bs-card">
+                <span class="bs-badge">Restocked</span>
+                <div class="bs-img-wrapper">
+                    <img src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792154849/6_dmk55u.jpg"
+                        alt="Front Open Pleated Abaya in Dusty Rose">
+                </div>
+                <div class="bs-info">
+                    <div>
+                        <h3 class="bs-card-title">Front Open Pleated Abaya</h3>
+                        <p class="bs-card-subtitle">Dusty Rose &middot; Breathable Crepe</p>
+                    </div>
+                    <div class="bs-info-bottom">
+                        <div class="bs-sizes" role="group" aria-label="Select size for Front Open Pleated Abaya">
+                            <button type="button" class="size-pill" aria-pressed="false">S</button>
+                            <button type="button" class="size-pill" aria-pressed="true">M</button>
+                            <button type="button" class="size-pill" aria-pressed="false">L</button>
+                            <button type="button" class="size-pill" aria-pressed="false">XL</button>
+                        </div>
+                        <div class="bs-price">PKR 7,500</div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="bs-card">
+                <span class="bs-badge">Trending</span>
+                <div class="bs-img-wrapper">
+                    <img src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792154849/7_uxkewa.jpg"
+                        alt="Everyday Chiffon Abaya in Olive Green">
+                </div>
+                <div class="bs-info">
+                    <div>
+                        <h3 class="bs-card-title">Everyday Weave Abaya</h3>
+                        <p class="bs-card-subtitle">Olive Green &middot; Opaque Weave</p>
+                    </div>
+                    <div class="bs-info-bottom">
+                        <div class="bs-sizes" role="group" aria-label="Select size for Everyday Weave Abaya">
+                            <button type="button" class="size-pill" aria-pressed="false">S</button>
+                            <button type="button" class="size-pill" aria-pressed="true">M</button>
+                            <button type="button" class="size-pill" aria-pressed="false">L</button>
+                            <button type="button" class="size-pill" aria-pressed="false">XL</button>
+                        </div>
+                        <div class="bs-price">PKR 5,800</div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="container section-footer-cta">
+            <a href="#best-sellers" class="btn btn-primary-dark">SHOP ALL ONE-LAYER ABAYAS</a>
+        </div>
+    </section>
+
+    <!-- 6. Minimalist Quote Section -->
+    <section class="simple-quote-section">
+        <div class="container sq-container">
+            <blockquote class="sq-text">
+                &ldquo;O children of Adam, We have given you clothing to cover you, and clothing for beauty.
+                <span class="sq-gold-line">But the clothing of righteousness &mdash; that is the best.&rdquo;</span>
+            </blockquote>
+            <p class="sq-citation">Qur&rsquo;an &middot; Surah Al-A&lsquo;raf 7:26</p>
+        </div>
+    </section>
+
+    <!-- 7. Heritage Collection Carousel -->
+    <section class="carousel-section" id="heritage">
+        <div class="container">
+            <div class="section-header-bar">
+                <div>
+                    <span class="kicker kicker-light">THE HERITAGE COLLECTION</span>
+                    <h2 class="section-title-underlined">FOR THE DAYS THAT MATTER</h2>
+                </div>
+                <div class="carousel-nav">
+                    <button type="button" class="icon-btn" data-carousel-prev="bs-track-2"
+                        aria-label="Previous Heritage Items">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <button type="button" class="icon-btn" data-carousel-next="bs-track-2"
+                        aria-label="Next Heritage Items">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-bleed" id="bs-track-2">
+            <article class="bs-card">
+                <span class="bs-badge">Exclusive</span>
+                <div class="bs-img-wrapper">
+                    <img src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792083447/4_ogvbbk.jpg"
+                        alt="Heritage Velvet Abaya in Midnight Maroon">
+                </div>
+                <div class="bs-info">
+                    <div>
+                        <h3 class="bs-card-title">Heritage Velvet Abaya</h3>
+                        <p class="bs-card-subtitle">Midnight Maroon &middot; Silk Trim</p>
+                    </div>
+                    <div class="bs-info-bottom">
+                        <div class="bs-sizes" role="group" aria-label="Select size for Heritage Velvet Abaya">
+                            <button type="button" class="size-pill" aria-pressed="false">S</button>
+                            <button type="button" class="size-pill" aria-pressed="true">M</button>
+                            <button type="button" class="size-pill" aria-pressed="false">L</button>
+                            <button type="button" class="size-pill" aria-pressed="false">XL</button>
+                        </div>
+                        <div class="bs-price">PKR 9,500</div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="bs-card">
+                <span class="bs-badge">New</span>
+                <div class="bs-img-wrapper">
+                    <img src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792154849/8_dcbqy8.jpg"
+                        alt="Timeless Nida Abaya in Deep Navy">
+                </div>
+                <div class="bs-info">
+                    <div>
+                        <h3 class="bs-card-title">Timeless Nida Abaya</h3>
+                        <p class="bs-card-subtitle">Deep Navy &middot;Korean Nida</p>
+                    </div>
+                    <div class="bs-info-bottom">
+                        <div class="bs-sizes" role="group" aria-label="Select size for Timeless Nida Abaya">
+                            <button type="button" class="size-pill" aria-pressed="false">S</button>
+                            <button type="button" class="size-pill" aria-pressed="true">M</button>
+                            <button type="button" class="size-pill" aria-pressed="false">L</button>
+                            <button type="button" class="size-pill" aria-pressed="false">XL</button>
+                        </div>
+                        <div class="bs-price">PKR 7,800</div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="bs-card">
+                <span class="bs-badge">Limited</span>
+                <div class="bs-img-wrapper">
+                    <img src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792083410/3_gfxfah.jpg"
+                        alt="Royal Crepe Abaya in Emerald Green">
+                </div>
+                <div class="bs-info">
+                    <div>
+                        <h3 class="bs-card-title">Royal Crepe Abaya</h3>
+                        <p class="bs-card-subtitle">Emerald Green &middot; Textured Crepe</p>
+                    </div>
+                    <div class="bs-info-bottom">
+                        <div class="bs-sizes" role="group" aria-label="Select size for Royal Crepe Abaya">
+                            <button type="button" class="size-pill" aria-pressed="false">S</button>
+                            <button type="button" class="size-pill" aria-pressed="true">M</button>
+                            <button type="button" class="size-pill" aria-pressed="false">L</button>
+                            <button type="button" class="size-pill" aria-pressed="false">XL</button>
+                        </div>
+                        <div class="bs-price">PKR 8,500</div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="bs-card">
+                <span class="bs-badge">Must Have</span>
+                <div class="bs-img-wrapper">
+                    <img src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792154849/10_utkmiq.jpg"
+                        alt="Signature Silk Abaya in Champagne Gold">
+                </div>
+                <div class="bs-info">
+                    <div>
+                        <h3 class="bs-card-title">Signature Silk Abaya</h3>
+                        <p class="bs-card-subtitle">Champagne Gold &middot; Heavy Weave</p>
+                    </div>
+                    <div class="bs-info-bottom">
+                        <div class="bs-sizes" role="group" aria-label="Select size for Signature Silk Abaya">
+                            <button type="button" class="size-pill" aria-pressed="false">S</button>
+                            <button type="button" class="size-pill" aria-pressed="true">M</button>
+                            <button type="button" class="size-pill" aria-pressed="false">L</button>
+                            <button type="button" class="size-pill" aria-pressed="false">XL</button>
+                        </div>
+                        <div class="bs-price">PKR 10,200</div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="container section-footer-cta">
+            <a href="#best-sellers" class="btn btn-primary-dark">SHOP HERITAGE</a>
+        </div>
+    </section>
+
+    <!-- 8. Why LEEMA Section -->
+    <section class="why-leema" id="why-leema">
+        <div class="container">
+            <div class="wl-inner">
+                <div class="section-header-center">
+                    <span class="kicker kicker-gold">Why LEEMA</span>
+                    <h2 class="wl-title">No Shameez.<span>No Suffering.</span></h2>
+                </div>
+
+                <div class="wl-table" role="table" aria-label="Comparison between standard abayas and LEEMA">
+                    <div class="wl-row wl-head" role="row">
+                        <div class="wl-cell usual" role="columnheader">The Usual</div>
+                        <div class="wl-cell leema" role="columnheader">LEEMA Standard</div>
+                    </div>
+                    <div class="wl-row" role="row">
+                        <div class="wl-cell usual" role="cell"><span class="wl-mark"
+                                aria-hidden="true">&#10005;</span>Sheer. Needs a shameez underneath.</div>
+                        <div class="wl-cell leema" role="cell"><span class="wl-mark"
+                                aria-hidden="true">&#10003;</span>Fully opaque. One layer, nothing else.</div>
+                    </div>
+                    <div class="wl-row" role="row">
+                        <div class="wl-cell usual" role="cell"><span class="wl-mark"
+                                aria-hidden="true">&#10005;</span>Stiff, heavy, hot by noon.</div>
+                        <div class="wl-cell leema" role="cell"><span class="wl-mark"
+                                aria-hidden="true">&#10003;</span>Soft, light, engineered for 40&deg;C heat.</div>
+                    </div>
+                    <div class="wl-row" role="row">
+                        <div class="wl-cell usual" role="cell"><span class="wl-mark"
+                                aria-hidden="true">&#10005;</span>Short, narrow, never enough drape.</div>
+                        <div class="wl-cell leema" role="cell"><span class="wl-mark"
+                                aria-hidden="true">&#10003;</span>Full ankle length. Full modest coverage.</div>
+                    </div>
+                    <div class="wl-row" role="row">
+                        <div class="wl-cell usual" role="cell"><span class="wl-mark"
+                                aria-hidden="true">&#10005;</span>Looks different in real life.</div>
+                        <div class="wl-cell leema" role="cell"><span class="wl-mark"
+                                aria-hidden="true">&#10003;</span>True-to-life studio calibration.</div>
+                    </div>
+                    <div class="wl-row" role="row">
+                        <div class="wl-cell usual" role="cell"><span class="wl-mark"
+                                aria-hidden="true">&#10005;</span>Exchange? Good luck getting a reply.</div>
+                        <div class="wl-cell leema" role="cell"><span class="wl-mark"
+                                aria-hidden="true">&#10003;</span>7-day rider exchange from your doorstep.</div>
+                    </div>
+                </div>
+
+                <div class="wl-guarantee">
+                    <span class="kicker kicker-gold">The Single-Layer Guarantee</span>
+                    <p class="wl-g-text">Every LEEMA abaya is 100% opaque on its own. If you hold it up to the sun and
+                        feel you need an inner, send it back for a full refund.</p>
+                    <a href="#best-sellers" class="btn btn-primary-light">Get My Abaya</a>
+                    <div class="wl-trust">
+                        <span>No sunlight panic</span>
+                        <span>&middot;</span>
+                        <span>No constant adjusting</span>
+                        <span>&middot;</span>
+                        <span>No second layer</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. Reviews Section -->
+    <section class="reviews-section" id="reviews">
+        <div class="container">
+            <div class="section-header-center">
+                <span class="kicker kicker-light">Real Stories</span>
+                <h2 class="rv-title">What Our Women Say</h2>
+            </div>
+
+            <div class="rv-summary">
+                <div class="rv-score">
+                    <div class="rv-score-num">4.9</div>
+                    <div class="rv-score-stars" aria-label="4.9 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;
+                    </div>
+                    <div class="rv-score-text">1,420+ verified reviews</div>
+                </div>
+                <div class="rv-bars">
+                    <div class="rv-bar"><span>5&#9733;</span><span class="rv-bar-track"><span class="rv-bar-fill"
+                                style="--w:93%"></span></span><span class="rv-bar-pct">93%</span></div>
+                    <div class="rv-bar"><span>4&#9733;</span><span class="rv-bar-track"><span class="rv-bar-fill"
+                                style="--w:5%"></span></span><span class="rv-bar-pct">5%</span></div>
+                    <div class="rv-bar"><span>3&#9733;</span><span class="rv-bar-track"><span class="rv-bar-fill"
+                                style="--w:1%"></span></span><span class="rv-bar-pct">1%</span></div>
+                    <div class="rv-bar"><span>2&#9733;</span><span class="rv-bar-track"><span class="rv-bar-fill"
+                                style="--w:1%"></span></span><span class="rv-bar-pct">1%</span></div>
+                    <div class="rv-bar"><span>1&#9733;</span><span class="rv-bar-track"><span class="rv-bar-fill"
+                                style="--w:0%"></span></span><span class="rv-bar-pct">0%</span></div>
+                </div>
+            </div>
+
+            <p class="rv-filter-label">Filter reviews by what matters most to you:</p>
+            <div class="rv-chips" id="rv-chips">
+                <button type="button" class="rv-chip active" data-filter="all" aria-pressed="true">All Reviews</button>
+                <button type="button" class="rv-chip" data-filter="opaque" aria-pressed="false">Opaque in sun</button>
+                <button type="button" class="rv-chip" data-filter="heat" aria-pressed="false">Heat &amp;
+                    comfort</button>
+                <button type="button" class="rv-chip" data-filter="fit" aria-pressed="false">Fit &amp; length</button>
+                <button type="button" class="rv-chip" data-filter="colour" aria-pressed="false">Colour accuracy</button>
+                <button type="button" class="rv-chip" data-filter="crease" aria-pressed="false">Zero creasing</button>
+            </div>
+        </div>
+
+        <div class="carousel-bleed" id="rv-track">
+            <article class="rv-card" data-tags="opaque heat">
+                <div class="rv-photo"><img
+                        src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792072868/2_czncnq.jpg"
+                        alt="Zainab Fatima wearing LEEMA" loading="lazy"></div>
+                <div class="rv-body">
+                    <div class="rv-stars" aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <h3 class="rv-headline">Nothing shows. Not even at noon.</h3>
+                    <p class="rv-quote">I stood in direct Lahore sun and checked my sleeves out of habit. Nothing. No
+                        shameez underneath, and I wasn&rsquo;t cooking by noon.</p>
+                    <div class="rv-fit">
+                        <span><b>Height</b>5&prime;4&Prime;</span>
+                        <span><b>Bought</b>Size M</span>
+                        <span><b>Fit</b>True to size</span>
+                    </div>
+                    <div class="rv-footer">
+                        <div><span class="rv-name">Zainab Fatima</span><span class="rv-loc">Lahore</span></div>
+                        <span class="rv-verified">&#10003; Verified Buyer</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="rv-card" data-tags="fit colour">
+                <div class="rv-photo"><img
+                        src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792083447/4_ogvbbk.jpg"
+                        alt="Maryam Tariq wearing LEEMA" loading="lazy"></div>
+                <div class="rv-body">
+                    <div class="rv-stars" aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <h3 class="rv-headline">Ordered by my height. Landed perfectly.</h3>
+                    <p class="rv-quote">I followed the size chart by my height and the length came exactly to my ankles.
+                        The colour matched the photo. No blueish whites, no surprises.</p>
+                    <div class="rv-fit">
+                        <span><b>Height</b>5&prime;2&Prime;</span>
+                        <span><b>Bought</b>Size S</span>
+                        <span><b>Fit</b>Perfect</span>
+                    </div>
+                    <div class="rv-footer">
+                        <div><span class="rv-name">Maryam Tariq</span><span class="rv-loc">Karachi</span></div>
+                        <span class="rv-verified">&#10003; Verified Buyer</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="rv-card" data-tags="crease heat">
+                <div class="rv-photo"><img
+                        src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792072858/1_lyyb8b.jpg"
+                        alt="Ayesha Siddiqui wearing LEEMA" loading="lazy"></div>
+                <div class="rv-body">
+                    <div class="rv-stars" aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <h3 class="rv-headline">Seven hours. Zero ironing.</h3>
+                    <p class="rv-quote">Full day at the office, two rides, and it still looks like I just put it on. The
+                        deep pockets are a bonus.</p>
+                    <div class="rv-fit">
+                        <span><b>Height</b>5&prime;6&Prime;</span>
+                        <span><b>Bought</b>Size L</span>
+                        <span><b>Fit</b>True to size</span>
+                    </div>
+                    <div class="rv-footer">
+                        <div><span class="rv-name">Ayesha Siddiqui</span><span class="rv-loc">Islamabad</span></div>
+                        <span class="rv-verified">&#10003; Verified Buyer</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="rv-card" data-tags="opaque colour">
+                <div class="rv-photo"><img
+                        src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792072868/2_czncnq.jpg"
+                        alt="Sara Ahmed wearing LEEMA" loading="lazy"></div>
+                <div class="rv-body">
+                    <div class="rv-stars" aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <h3 class="rv-headline">Finally, a light colour I can trust.</h3>
+                    <p class="rv-quote">I always avoided pale shades because of the shameez problem. I held it up to the
+                        window the day it arrived. Fully opaque, and the colour is exactly as shown.</p>
+                    <div class="rv-fit">
+                        <span><b>Height</b>5&prime;5&Prime;</span>
+                        <span><b>Bought</b>Size M</span>
+                        <span><b>Fit</b>True to size</span>
+                    </div>
+                    <div class="rv-footer">
+                        <div><span class="rv-name">Sara Ahmed</span><span class="rv-loc">Peshawar</span></div>
+                        <span class="rv-verified">&#10003; Verified Buyer</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="rv-card" data-tags="heat fit">
+                <div class="rv-photo"><img
+                        src="https://res.cloudinary.com/dfcbbpovw/image/upload/v1792083447/4_ogvbbk.jpg"
+                        alt="Hina Raza wearing LEEMA" loading="lazy"></div>
+                <div class="rv-body">
+                    <div class="rv-stars" aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <h3 class="rv-headline">Faisalabad summer. Still breathing.</h3>
+                    <p class="rv-quote">Full sleeves, hem to the floor, and somehow lighter than my cotton kurta. I
+                        didn&rsquo;t think modest and cool in this heat was possible.</p>
+                    <div class="rv-fit">
+                        <span><b>Height</b>5&prime;3&Prime;</span>
+                        <span><b>Bought</b>Size M</span>
+                        <span><b>Fit</b>True to size</span>
+                    </div>
+                    <div class="rv-footer">
+                        <div><span class="rv-name">Hina Raza</span><span class="rv-loc">Faisalabad</span></div>
+                        <span class="rv-verified">&#10003; Verified Buyer</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="container">
+            <div class="rv-controls-bar">
+                <div class="rv-progress" aria-hidden="true">
+                    <div class="rv-progress-bar" id="rv-progress-bar"></div>
+                </div>
+                <div class="carousel-nav">
+                    <button type="button" class="icon-btn" data-carousel-prev="rv-track" aria-label="Previous reviews">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <button type="button" class="icon-btn" data-carousel-next="rv-track" aria-label="Next reviews">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="section-footer-cta">
+                <a href="#best-sellers" class="btn btn-primary-dark">Shop What They&rsquo;re Wearing</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="container faq-layout">
+            <div class="faq-head">
+                <span class="kicker kicker-gold">Objections Answered</span>
+                <h2 class="faq-title">Every Doubt,<span>Answered.</span></h2>
+                <p class="faq-sub">No fine print. Straight answers before you spend a single rupee.</p>
+            </div>
+            <div class="faq-main">
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-a1"
+                            id="faq-q1">
+                            <span class="faq-num">01</span>
+                            <span class="faq-q-text">Will it be see-through in the sun?</span>
+                            <span class="faq-icon" aria-hidden="true"></span>
+                        </button>
+                        <div class="faq-answer-wrapper" id="faq-a1" role="region" aria-labelledby="faq-q1">
+                            <div class="faq-answer"><strong>No. 100% single-layer opacity.</strong>Every LEEMA abaya is
+                                woven from high-density Korean Nida or Textured Crepe, engineered for zero transparency
+                                even in lighter shades and direct noon sunlight.</div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-a2"
+                            id="faq-q2">
+                            <span class="faq-num">02</span>
+                            <span class="faq-q-text">Do I need a shameez or inner underneath?</span>
+                            <span class="faq-icon" aria-hidden="true"></span>
+                        </button>
+                        <div class="faq-answer-wrapper" id="faq-a2" role="region" aria-labelledby="faq-q2">
+                            <div class="faq-answer"><strong>No. One layer is the promise.</strong>That is our
+                                Single-Layer Guarantee. If you feel you need an inner layer, return it within 7 days
+                                from your doorstep.</div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-a3"
+                            id="faq-q3">
+                            <span class="faq-num">03</span>
+                            <span class="faq-q-text">Will it be too hot for Pakistani summers?</span>
+                            <span class="faq-icon" aria-hidden="true"></span>
+                        </button>
+                        <div class="faq-answer-wrapper" id="faq-a3" role="region" aria-labelledby="faq-q3">
+                            <div class="faq-answer"><strong>It is engineered for 40&deg;C+ heat.</strong>Breathable
+                                open-weave construction lets air circulate while blocking UV rays. Because you skip the
+                                second inner layer, you stay significantly cooler.</div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-a4"
+                            id="faq-q4">
+                            <span class="faq-num">04</span>
+                            <span class="faq-q-text">How do I choose my size and length?</span>
+                            <span class="faq-icon" aria-hidden="true"></span>
+                        </button>
+                        <div class="faq-answer-wrapper" id="faq-a4" role="region" aria-labelledby="faq-q4">
+                            <div class="faq-answer"><strong>Order by your height or shoulder-to-floor
+                                    measurement.</strong>Choose your exact measurement if you wear flats, or add 2
+                                inches if you regularly wear heels.</div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false" aria-controls="faq-a5"
+                            id="faq-q5">
+                            <span class="faq-num">05</span>
+                            <span class="faq-q-text">How does Open-Parcel Cash on Delivery work?</span>
+                            <span class="faq-icon" aria-hidden="true"></span>
+                        </button>
+                        <div class="faq-answer-wrapper" id="faq-a5" role="region" aria-labelledby="faq-q5">
+                            <div class="faq-answer"><strong>Inspect first, pay second.</strong>When the courier arrives,
+                                open the flyer, check the fabric weight and colour accuracy with your own eyes, and only
+                                then hand over the cash.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-cta">
+                    <a href="#best-sellers" class="btn btn-primary-light">Get My Abaya</a>
+                    <a href="https://wa.me/923000000000" class="btn btn-outline-gold" target="_blank" rel="noopener">Ask
+                        Us On WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. Luxury Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-logo-wrapper">
+                    <div class="footer-logo">L E E M A</div>
+                </div>
+                <p class="footer-tagline">Modest luxury crafted for the modern woman. Elevating everyday wear with
+                    opaque single-layer fabrics and impeccable tailoring.</p>
+            </div>
+
+            <div class="footer-grid">
+                <div class="footer-brand-box">
+                    <h4 class="footer-col-title">Private Dispatch</h4>
+                    <p>Receive early access to restocks, limited Heritage drops, and modest styling notes.</p>
+                    <form class="newsletter-form" onsubmit="event.preventDefault();">
+                        <label for="footer-email" class="skip-link">Email address</label>
+                        <input type="email" id="footer-email" class="newsletter-input" placeholder="Enter your email"
+                            required>
+                        <button type="submit" class="newsletter-btn">Join</button>
+                    </form>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="footer-col-title">Shop <span class="f-icon" aria-hidden="true"></span></h4>
+                    <div class="footer-links-wrapper">
+                        <ul class="footer-links">
+                            <li><a href="#best-sellers">Best Sellers</a></li>
+                            <li><a href="#heritage">Heritage Collection</a></li>
+                            <li><a href="#collections">Everyday Abayas</a></li>
+                            <li><a href="#collections">Opaque Hijabs</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="footer-col-title">Support <span class="f-icon" aria-hidden="true"></span></h4>
+                    <div class="footer-links-wrapper">
+                        <ul class="footer-links">
+                            <li><a href="#faq">Open-Parcel Policy</a></li>
+                            <li><a href="#faq">7-Day Doorstep Exchange</a></li>
+                            <li><a href="#faq">Height &amp; Size Guide</a></li>
+                            <li><a href="https://wa.me/923000000000">WhatsApp Concierge</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="footer-col-title">House <span class="f-icon" aria-hidden="true"></span></h4>
+                    <div class="footer-links-wrapper">
+                        <ul class="footer-links">
+                            <li><a href="#why-leema">The Single-Layer Standard</a></li>
+                            <li><a href="#reviews">Verified Client Stories</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">&copy; 2026 LEEMA OFFICIAL &middot; MODEST LUXURY ACROSS PAKISTAN</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* ==========================================================================
+           1. ANNOUNCEMENT BAR ROTATION
+           ========================================================================== */
+        (function () {
+            const msgs = Array.from(document.querySelectorAll('.urgency-banner .ub-msg'));
+            if (msgs.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            let i = 0;
+            setInterval(() => {
+                msgs[i].classList.remove('active');
+                i = (i + 1) % msgs.length;
+                msgs[i].classList.add('active');
+            }, 4000);
+        })();
+
+        /* ==========================================================================
+           2. HORIZONTAL CAROUSEL CONTROLS & INTERACTIVE SIZE PILLS
+           ========================================================================== */
+        document.querySelectorAll('[data-carousel-prev]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const track = document.getElementById(btn.getAttribute('data-carousel-prev'));
+                if (track) track.scrollBy({ left: -360, behavior: 'smooth' });
+            });
+        });
+
+        document.querySelectorAll('[data-carousel-next]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const track = document.getElementById(btn.getAttribute('data-carousel-next'));
+                if (track) track.scrollBy({ left: 360, behavior: 'smooth' });
+            });
+        });
+
+        /* Interactive Size Selection on Product Cards */
+        document.querySelectorAll('.bs-sizes').forEach((group) => {
+            const pills = group.querySelectorAll('.size-pill');
+            pills.forEach((pill) => {
+                pill.addEventListener('click', () => {
+                    pills.forEach(p => p.setAttribute('aria-pressed', 'false'));
+                    pill.setAttribute('aria-pressed', 'true');
+                });
+            });
+        });
+
+        /* ==========================================================================
+           3. REVIEWS: CONCERN FILTER + SCROLL PROGRESS
+           ========================================================================== */
+        (function () {
+            const section = document.getElementById('reviews');
+            const track = document.getElementById('rv-track');
+            const bar = document.getElementById('rv-progress-bar');
+            if (!section || !track || !bar) return;
+            const cards = Array.from(track.querySelectorAll('.rv-card'));
+            const chips = Array.from(section.querySelectorAll('.rv-chip'));
+
+            function updateProgress() {
+                const max = track.scrollWidth - track.clientWidth;
+                const w = Math.min(100, Math.max(15, (track.clientWidth / track.scrollWidth) * 100));
+                const p = max > 0 ? track.scrollLeft / max : 0;
+                bar.style.width = w + '%';
+                bar.style.left = (p * (100 - w)) + '%';
+            }
+
+            chips.forEach(chip => chip.addEventListener('click', () => {
+                chips.forEach(c => { c.classList.remove('active'); c.setAttribute('aria-pressed', 'false'); });
+                chip.classList.add('active');
+                chip.setAttribute('aria-pressed', 'true');
+                const tag = chip.dataset.filter;
+                cards.forEach(card => {
+                    const show = tag === 'all' || card.dataset.tags.split(' ').includes(tag);
+                    card.hidden = !show;
+                });
+                track.scrollTo({ left: 0, behavior: 'auto' });
+                updateProgress();
+            }));
+
+            track.addEventListener('scroll', () => requestAnimationFrame(updateProgress), { passive: true });
+            window.addEventListener('resize', updateProgress);
+            updateProgress();
+        })();
+
+        /* ==========================================================================
+           4. FAQ ACCORDION LOGIC
+           ========================================================================== */
+        (function () {
+            const items = Array.from(document.querySelectorAll('.faq-item'));
+            function setOpen(item, open) {
+                const btn = item.querySelector('.faq-question');
+                const wrap = item.querySelector('.faq-answer-wrapper');
+                item.classList.toggle('active', open);
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                wrap.style.maxHeight = open ? wrap.scrollHeight + 'px' : null;
+            }
+            function refreshOpen() {
+                items.forEach(item => {
+                    if (item.classList.contains('active')) {
+                        const wrap = item.querySelector('.faq-answer-wrapper');
+                        wrap.style.maxHeight = wrap.scrollHeight + 'px';
+                    }
+                });
+            }
+            items.forEach(item => {
+                item.querySelector('.faq-question').addEventListener('click', () => {
+                    const wasOpen = item.classList.contains('active');
+                    items.forEach(i => setOpen(i, false));
+                    if (!wasOpen) setOpen(item, true);
+                });
+            });
+            if (items[0]) setOpen(items[0], true);
+            window.addEventListener('load', refreshOpen);
+            window.addEventListener('resize', refreshOpen);
+        })();
+
+        /* ==========================================================================
+           5. FOOTER ACCORDION LOGIC (MOBILE ONLY)
+           ========================================================================== */
+        document.querySelectorAll('.footer-col-title').forEach(title => {
+            title.addEventListener('click', () => {
+                if (window.innerWidth > 900) return;
+                const column = title.parentElement;
+                if (!column.classList.contains('footer-column')) return;
+                const wrapper = column.querySelector('.footer-links-wrapper');
+                const isActive = column.classList.contains('active');
+
+                document.querySelectorAll('.footer-column').forEach(col => {
+                    col.classList.remove('active');
+                    const linkWrap = col.querySelector('.footer-links-wrapper');
+                    if (linkWrap) linkWrap.style.maxHeight = null;
+                });
+
+                if (!isActive && wrapper) {
+                    column.classList.add('active');
+                    wrapper.style.maxHeight = wrapper.scrollHeight + "px";
+                }
+            });
+        });
+
+        /* ==========================================================================
+           6. MOBILE NAVIGATION DRAWER CONTROLLER
+           ========================================================================== */
+        (function () {
+            const toggleBtn = document.getElementById('mobile-menu-toggle');
+            const drawer = document.getElementById('mobile-drawer');
+            const overlay = document.getElementById('drawer-overlay');
+            const closeBtn = document.getElementById('drawer-close');
+            const links = document.querySelectorAll('.drawer-nav-link');
+
+            if (!toggleBtn || !drawer || !overlay) return;
+
+            function openMenu() {
+                drawer.classList.add('active');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.setAttribute('aria-expanded', 'true');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMenu() {
+                drawer.classList.remove('active');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (drawer.classList.contains('active')) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            });
+
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+            overlay.addEventListener('click', closeMenu);
+            links.forEach(l => l.addEventListener('click', closeMenu));
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && drawer.classList.contains('active')) {
+                    closeMenu();
+                    toggleBtn.focus();
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>
